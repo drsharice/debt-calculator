@@ -1,5 +1,12 @@
 import { Box, Heading, useColorModeValue } from "@chakra-ui/react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import type { Debt } from "../types/DebtTypes";
 
 interface Props {
@@ -7,14 +14,16 @@ interface Props {
 }
 
 export default function PayoffTimelineChart({ debts }: Props) {
-  const data = debts.map((d) => ({
-    name: d.name,
-    payoff: new Date(d.payoffDate).getTime(),
-    displayDate: d.payoffDate,
-  }));
-
-  // Sort debts by payoff date
-  data.sort((a, b) => a.payoff - b.payoff);
+  const data = debts
+    .map((d) => {
+      const date = new Date(d.payoffDate);
+      return {
+        name: d.name,
+        payoff: date.getTime(),
+        displayDate: date.toLocaleDateString(),
+      };
+    })
+    .sort((a, b) => a.payoff - b.payoff);
 
   return (
     <Box
@@ -36,8 +45,16 @@ export default function PayoffTimelineChart({ debts }: Props) {
           <BarChart data={data}>
             <XAxis dataKey="name" />
             <YAxis hide />
-            <Tooltip formatter={(val) => new Date(val as number).toLocaleDateString()} />
-            <Bar dataKey="payoff" fill="#3182CE" />
+            <Tooltip
+              formatter={(val) =>
+                new Date(val as number).toLocaleDateString()
+              }
+              labelFormatter={(label) => `Debt: ${label}`}
+            />
+            <Bar
+              dataKey="payoff"
+              fill={useColorModeValue("#3182CE", "#63B3ED")}
+            />
           </BarChart>
         </ResponsiveContainer>
       )}

@@ -1,5 +1,5 @@
 import type { Debt } from "../types";
-import type { User } from "../types";
+
 
 
 export function loadDebts(username: string): Debt[] {

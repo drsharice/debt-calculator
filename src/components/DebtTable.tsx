@@ -44,16 +44,24 @@ export default function DebtTable({ debts, onEdit, onDelete }: Props) {
     const valA = a[sortColumn];
     const valB = b[sortColumn];
 
+    // Safe date sort
     if (sortColumn === "payoffDate") {
+      const dateA =
+        typeof valA === "string" ? new Date(valA) : new Date(0);
+      const dateB =
+        typeof valB === "string" ? new Date(valB) : new Date(0);
+
       return sortDirection === "asc"
-        ? new Date(valA).getTime() - new Date(valB).getTime()
-        : new Date(valB).getTime() - new Date(valA).getTime();
+        ? dateA.getTime() - dateB.getTime()
+        : dateB.getTime() - dateA.getTime();
     }
 
+    // Numeric sort
     if (typeof valA === "number" && typeof valB === "number") {
       return sortDirection === "asc" ? valA - valB : valB - valA;
     }
 
+    // Text sort
     return sortDirection === "asc"
       ? String(valA).localeCompare(String(valB))
       : String(valB).localeCompare(String(valA));
@@ -82,8 +90,12 @@ export default function DebtTable({ debts, onEdit, onDelete }: Props) {
             <Th>Total</Th>
             <Th>Rate</Th>
             <Th>Payment</Th>
-            <Th>Payoff Date</Th>
-            <Th>Interest Paid</Th>
+            <Th onClick={() => handleSort("payoffDate")} cursor="pointer">
+              Payoff Date {icon("payoffDate")}
+            </Th>
+            <Th onClick={() => handleSort("interestPaid")} cursor="pointer">
+              Interest Paid {icon("interestPaid")}
+            </Th>
             <Th>Notes</Th>
             <Th>Edit</Th>
             <Th>Delete</Th>

@@ -1,5 +1,5 @@
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { Box, Heading, useColorModeValue } from "@chakra-ui/react";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import type { Debt } from "../types/DebtTypes";
 
 interface Props {
@@ -16,8 +16,8 @@ export default function InterestPieChart({ debts }: Props) {
   ];
 
   const COLORS = [
-    useColorModeValue("#3182CE", "#63B3ED"), // blue
-    useColorModeValue("#E53E3E", "#FC8181"), // red
+    useColorModeValue("#3182CE", "#63B3ED"),
+    useColorModeValue("#E53E3E", "#FC8181"),
   ];
 
   return (
@@ -39,11 +39,10 @@ export default function InterestPieChart({ debts }: Props) {
           cx="50%"
           cy="50%"
           outerRadius={110}
-          fill="#8884d8"
           dataKey="value"
           label
         >
-          {data.map((entry, index) => (
+          {data.map((_, index) => (
             <Cell key={index} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>

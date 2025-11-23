@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState } from "react";
+import type { ReactNode } from "react";
 
 export interface User {
   username: string;
@@ -11,8 +12,14 @@ interface UserRecord {
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string) => { success: boolean; message?: string };
-  register: (username: string, password: string) => { success: boolean; message?: string };
+  login: (
+    username: string,
+    password: string
+  ) => { success: boolean; message?: string };
+  register: (
+    username: string,
+    password: string
+  ) => { success: boolean; message?: string };
   logout: () => void;
 }
 
@@ -25,45 +32,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const login = (username: string, password: string) => {
-  if (!username.trim() || !password.trim()) {
-    return { success: false, message: "Username and password are required." };
-  }
+    if (!username.trim() || !password.trim()) {
+      return {
+        success: false,
+        message: "Username and password are required.",
+      };
+    }
 
-  const stored: Record<string, UserRecord> =
-    JSON.parse(localStorage.getItem("users") || "{}");
+    const stored: Record<string, UserRecord> = JSON.parse(
+      localStorage.getItem("users") || "{}"
+    );
 
-  if (!stored[username] || stored[username].password !== password) {
-    return { success: false, message: "Invalid credentials." };
-  }
+    if (!stored[username] || stored[username].password !== password) {
+      return { success: false, message: "Invalid credentials." };
+    }
 
-  const newUser = { username };
-  setUser(newUser);
-  localStorage.setItem("user", JSON.stringify(newUser));
+    const newUser = { username };
+    setUser(newUser);
+    localStorage.setItem("user", JSON.stringify(newUser));
 
-  return { success: true };
-};
+    return { success: true };
+  };
 
   const register = (username: string, password: string) => {
-  if (!username.trim() || !password.trim()) {
-    return { success: false, message: "Username and password are required." };
-  }
+    if (!username.trim() || !password.trim()) {
+      return {
+        success: false,
+        message: "Username and password are required.",
+      };
+    }
 
-  const storedUsers: Record<string, UserRecord> =
-    JSON.parse(localStorage.getItem("users") || "{}");
+    const storedUsers: Record<string, UserRecord> = JSON.parse(
+      localStorage.getItem("users") || "{}"
+    );
 
-  if (storedUsers[username]) {
-    return { success: false, message: "This username already exists." };
-  }
+    if (storedUsers[username]) {
+      return { success: false, message: "This username already exists." };
+    }
 
-  storedUsers[username] = { username, password };
-  localStorage.setItem("users", JSON.stringify(storedUsers));
+    storedUsers[username] = { username, password };
+    localStorage.setItem("users", JSON.stringify(storedUsers));
 
-  const newUser = { username };
-  setUser(newUser);
-  localStorage.setItem("user", JSON.stringify(newUser));
+    const newUser = { username };
+    setUser(newUser);
+    localStorage.setItem("user", JSON.stringify(newUser));
 
-  return { success: true };
-};
+    return { success: true };
+  };
 
   const logout = () => {
     setUser(null);
